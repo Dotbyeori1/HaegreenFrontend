@@ -107,6 +107,9 @@ export default {
       }
     },
     async removeNoticeBoard() {
+      let result = confirm("삭제하시겠습니까?");
+      if(!result) return null;
+
       try {
         const response = await frontSideApiService.jowhangBoardDelete({jbno: this.jbno});
         alert(response.data.success);

@@ -54,7 +54,8 @@ export default {
 
     // NoticeBoard 공지게시판
     noticeBoardListGet(searchForm){
-        return axios.get(API_URL + "/noticeboard/list", searchForm, { headers: getHeaders() });
+        return axios.get(API_URL + "/noticeboard/list",
+            { params : { page : searchForm.page, type : searchForm.type, keyword : searchForm.keyword }, headers: getHeaders() });
     },
     noticeBoardRegister(noticeBoardRegisterData) {
         const config = {
@@ -83,7 +84,8 @@ export default {
 
     // JowhangBoard 조황게시판
     jowhangBoardListGet(searchForm){
-        return axios.get(API_URL + "/jowhangboard/list", searchForm, { headers: getHeaders() });
+        return axios.get(API_URL + "/jowhangboard/list",
+            { params : { page : searchForm.page, type : searchForm.type, keyword : searchForm.keyword }, headers: getHeaders() });
     },
     jowhangBoardRegister(jowhangBoardRegisterData) {
         const config = {
@@ -121,7 +123,8 @@ export default {
         return axios.get(API_URL + "/reservation/list", { headers: getHeaders() });
     },
     loadReservationDateDetail(regDate) {
-        return axios.get(API_URL + "/reservation/register", regDate, { headers: getHeaders() });
+        return axios.get(API_URL + "/reservation/register",
+            { params : { regDate : regDate }, headers: getHeaders() });
     },
     registerReservation(reservationData) {
         return axios.post(API_URL + "/reservation/register", reservationData, { headers: getHeaders() });

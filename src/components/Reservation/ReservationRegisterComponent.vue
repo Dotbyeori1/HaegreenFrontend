@@ -98,7 +98,7 @@ export default {
     },
     async loadReservationDateDetail() {
       try {
-        const response = await frontSideApiService.loadReservationDateDetail({ params : {regDate : this.regDate}})  // 여기서 data를 사용하여 전달);
+        const response = await frontSideApiService.loadReservationDateDetail(this.regDate)  // 여기서 data를 사용하여 전달);
         this.extras = response.data.extras;
         this.fishingMoney = response.data.fishingMoney;
         this.memberFormDto = response.data.memberFormDto;

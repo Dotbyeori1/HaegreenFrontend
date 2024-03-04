@@ -35,7 +35,8 @@
   <table class="table table-bordered" style="max-width: 950px; margin: 0 auto 50px auto;">
     <thead>
     <tr class="table-light">
-      <th colspan="4" style="text-align: center;">
+      <th colspan="4" style="text-align: center;"
+          :class="{'sunday': selectedDateDetails.dayOfWeek === '일', 'saturday': selectedDateDetails.dayOfWeek === '토'}">
         {{ selectedDateDetails.fullDate }} ({{ selectedDateDetails.dayOfWeek }})
       </th>
     </tr>
@@ -291,6 +292,14 @@ export default {
 
 .day:nth-child(7n),
 .date:nth-child(7n) {
+  color: #396EE2;
+}
+
+.sunday {
+  color: #D13E3E;
+}
+
+.saturday {
   color: #396EE2;
 }
 

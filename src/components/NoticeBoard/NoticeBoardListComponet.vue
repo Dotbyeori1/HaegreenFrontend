@@ -12,7 +12,7 @@
                   </button>
                 </div>
                 <div class="col-md-4 col-lg-5">
-                  <form @submit.prevent="getMainData(this.searchForm)">
+                  <form @submit.prevent="searchAudit(this.searchForm)">
                     <div class="input-group">
                       <input type="hidden" name="page" value="1">
                       <div class="input-group-prepend">
@@ -24,7 +24,7 @@
                       </div>
                       <input class="form-control" v-model="searchForm.keyword"/>&nbsp;
                       <div class="input-group-append" id="button-addon4">
-                        <button class="btn btn-primary" type="submit">검색</button>
+                        <button class="btn btn-primary" type="submit" style="margin-right: 5px;">검색</button>
                         <button class="btn btn-outline-primary" type="button" @click="clear">초기화</button>
                       </div>
                     </div>
@@ -60,27 +60,24 @@
                 <ul class="pagination justify-content-center">
                   <!-- 'Previous' 버튼 -->
                   <li :class="result.prev ? 'page-item' : 'page-item disabled'">
-                    <router-link class="page-link"
-                                 :to="{ name: 'NoticeBoardList', query: { page: result.page - 1, type: pageRequestDTO.type, keyword: pageRequestDTO.keyword }}">
+                    <a class="page-link" @click="changePage( this.result.page - 1)">
                       이전
-                    </router-link>
+                    </a>
                   </li>
 
                   <!-- 페이지네이션 -->
                   <li v-for="page in paginationRange" :key="page"
                       :class="result.page === page ? 'page-item active' : 'page-item'">
-                    <router-link class="page-link"
-                                 :to="{ name: 'NoticeBoardList', query: { page: page, type: pageRequestDTO.type, keyword: pageRequestDTO.keyword }}">
+                    <a class="page-link" @click="changePage(page)">
                       {{ page }}
-                    </router-link>
+                    </a>
                   </li>
 
                   <!-- 'Next' 버튼 -->
                   <li :class="result.next ? 'page-item' : 'page-item disabled'">
-                    <router-link class="page-link"
-                                 :to="{ name: 'NoticeBoardList', query: { page: result.page + 1, type: pageRequestDTO.type, keyword: pageRequestDTO.keyword }}">
+                    <a class="page-link" @click="changePage(this.result.page + 1)">
                       다음
-                    </router-link>
+                    </a>
                   </li>
                 </ul>
               </nav>
@@ -101,13 +98,14 @@ export default {
   name: "NoticeBoardListComponent",
   data() {
     return {
-      pageRequestDTO: {type: '', keyword: ''},
+      pageRequestDTO: {page : '', size : '',type: '', keyword: ''},
       result: {
         dtoList: [{nbno: ""}],
         prev: false,
         next: false,
       },
       searchForm: {
+        page : this.$route.query.page || 1,
         type: this.$route.query.type || 't',
         keyword: this.$route.query.keyword  || '',
       },
@@ -141,9 +139,23 @@ export default {
     goWrite() {
       this.$router.push('/noticeboard/register');
     },
+    changePage(page){
+      this.searchForm.page=page;
+      this.getMainData(this.searchForm);
+    },
+    searchAudit(searchForm){
+      if(!searchForm.keyword){
+        return null;
+      } else if(searchForm.keyword && this.searchForm.page > 1){
+        this.searchForm.page = 1;
+        this.getMainData(searchForm);
+      } else {
+        this.getMainData(searchForm);
+      }
+    },
     async getMainData(searchForm) {
       try {
-        const response = await frontSideApiService.noticeBoardListGet({params : searchForm});
+        const response = await frontSideApiService.noticeBoardListGet(searchForm);
         this.pageRequestDTO = response.data.pageRequestDTO;
         this.result = response.data.result;
       } catch (error) {
@@ -152,9 +164,13 @@ export default {
       }
     },
     clear() {
-      const updatedSearchForm = {type: 't', keyword: ''};
-      this.searchForm = updatedSearchForm;
-      this.getMainData(updatedSearchForm);
+      if(!this.searchForm.keyword){
+        return null;
+      }else {
+        const updatedSearchForm = {type: 't', keyword: '', page : this.$route.query.page };
+        this.searchForm = updatedSearchForm;
+        this.getMainData(updatedSearchForm);
+      }
     },
     formatDate(dateStr) {
       const date = new Date(dateStr);
@@ -165,4 +181,7 @@ export default {
 </script>
 
 <style scoped>
+.pagination a {
+  cursor: pointer;
+}
 </style>

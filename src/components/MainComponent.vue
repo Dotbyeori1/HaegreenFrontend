@@ -13,10 +13,13 @@
             <h5>{{ dateInfo.displayDate }} ({{ dateInfo.dayOfWeek }})</h5>
             <div style="text-align: center; margin-top: 5px;">
               <b>{{ dateInfo.isAvailable ? '종류' : (dateInfo.dateModify ? '결항사유' : '종류') }}</b><br/>
-              {{ dateInfo.isAvailable ? dateInfo.fishingSort : (dateInfo.dateModify ? dateInfo.message : dateInfo.fishingSort) }}<br/>
+              {{
+                dateInfo.isAvailable ? dateInfo.fishingSort : (dateInfo.dateModify ? dateInfo.message : dateInfo.fishingSort)
+              }}<br/>
               <b>남은인원</b><br/>
               {{ dateInfo.extraMembers }}명<br/>
-              <button class="btn" :class="dateInfo.btnClass" @click="redirectToReservation(dateInfo.fullDate, dateInfo.isAvailable)">
+              <button class="btn" :class="dateInfo.btnClass"
+                      @click="redirectToReservation(dateInfo.fullDate, dateInfo.isAvailable)">
                 {{ dateInfo.isAvailable ? '예약가능' : '예약불가' }}
               </button>
             </div>
@@ -36,22 +39,16 @@
           <div class="row mt-5">
             <div class="col-12"
                  v-if="jowhangBoard != null && jowhangBoard.dtoList != null">
-              <div class="global-slick-init attraction-slider nav-style-one slider-inner-margin"
-                   data-appendArrows=".append-attraction" data-infinite="true" data-arrows="true"
-                   data-dots="false" data-slidesToShow="4" data-swipeToSlide="true" data-autoplay="true"
-                   data-autoplaySpeed="2500"
-                   data-prevArrow='<div class="prev-icon"><i class="las la-angle-left"></i></div>'
-                   data-nextArrow='<div class="next-icon"><i class="las la-angle-right"></i></div>'
-                   data-responsive='[{"breakpoint": 1400,"settings": {"slidesToShow": 4}},{"breakpoint": 1200,"settings": {"slidesToShow": 3}},{"breakpoint": 992,"settings": {"slidesToShow": 2}},{"breakpoint": 480, "settings": {"slidesToShow": 1} }]'>
-                <div class="attraction-item" v-for="dto in jowhangBoard.dtoList" :key="dto.jbno"
+              <div class="global-slick-init attraction-slider nav-style-one slider-inner-margin">
+                  <div class="attraction-item" v-for="dto in jowhangBoard.dtoList" :key="dto.jbno"
                      style="width: 24%;">
-                  <div class="single-attraction radius-20">
-                    <div class="single-attraction-thumb">
-                      <router-link :to="{ path: '/jowhangboard/read', query: { jbno: dto.jbno } }">
-                        <img src="@/assets/jowhangtitle.jpg"
+                    <div class="single-attraction radius-20">
+                      <div class="single-attraction-thumb">
+                        <router-link :to="{ path: '/jowhangboard/read', query: { jbno: dto.jbno } }">
+                          <img src="@/assets/jowhangtitle.jpg"
                              :alt="dto.title">
-                      </router-link>
-                    </div>
+                        </router-link>
+                      </div>
                     <div class="single-attraction-contents">
                       <h4 class="single-attraction-contents-title"
                           style="white-space: nowrap; overflow: hidden;  text-overflow: ellipsis;">
@@ -107,8 +104,8 @@
         </div>
       </span>
           </div>
-              <MapComponent></MapComponent>
-          </div>
+          <MapComponent></MapComponent>
+        </div>
       </div>
     </div>
   </section>
@@ -117,14 +114,17 @@
 <script>
 import frontSideApiService from "@/services/FrontSideApiService";
 import MapComponent from "@/components/MapComponent.vue";
+import $ from 'jquery'
+import 'slick-carousel';
+
 export default {
   name: "MainComponent",
-  components : {MapComponent},
+  components: {MapComponent},
   data() {
     return {
       reservations: [], // reservations 데이터 배열
       reservationDates: [], // reservationDate 데이터 배열
-      jowhangBoard: { dtoList : [] }, // 조황게시판
+      jowhangBoard: {dtoList: []}, // 조황게시판
       calendarDates: [], // 캘린더 뷰를 위한 데이터 배열
       dayNames: ["일", "월", "화", "수", "목", "금", "토"],
       reservationCountByDate: {},
@@ -133,11 +133,54 @@ export default {
       fishingSortBydate: {},
       extraMembersBydate: {},
       dateModifyByDate: {},
-      copyStatus : "" // 복사실패
+      copyStatus: "", // 복사실패
     }
   },
-  mounted() {
-    this.getMainData();
+  async mounted() {
+    await this.getMainData();
+    this.$nextTick(function() {
+      $(".global-slick-init").slick({
+        appendArrows: ".append-attraction",
+        infinite: true,
+        arrows: true,
+        dots: false,
+        slidesToShow: 4,
+        swipeToSlide: true,
+        autoplay: true,
+        autoplaySpeed: 2500,
+        prevArrow: '<div class="prev-icon"><i class="las la-angle-left"></i></div>',
+        nextArrow: '<div class="next-icon"><i class="las la-angle-right"></i></div>',
+        responsive: [
+          {
+            breakpoint: 1400,
+            settings: {
+              slidesToShow: 4
+            }
+          },
+          {
+            breakpoint: 1200,
+            settings: {
+              slidesToShow: 3
+            }
+          },
+          {
+            breakpoint: 992,
+            settings: {
+              slidesToShow: 2
+            }
+          },
+          {
+            breakpoint: 480,
+            settings: {
+              slidesToShow: 1
+            }
+          }
+        ]
+      });
+    });
+  },
+  beforeUnmount() {
+    $(".global-slick-init").slick('unslick');
   },
   methods: {
     redirectToReservationList() {
@@ -308,7 +351,7 @@ export default {
 .weeklyReservation {
   position: relative;
   max-width: 950px;
-  margin: 0px auto;
+  margin: 0 auto;
 }
 
 .dates {

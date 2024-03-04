@@ -2,7 +2,8 @@
   <table class="table table-bordered" style="max-width: 950px; margin: 0 auto 50px auto;">
     <thead>
     <tr class="table-light">
-      <th colspan="4" style="text-align: center;">
+      <th colspan="4" style="text-align: center;"
+          :class="{'sunday': selectedDateDetails.dayOfWeek === '일', 'saturday': selectedDateDetails.dayOfWeek === '토'}">
         {{ selectedDateDetails.fullDate }} ({{ selectedDateDetails.dayOfWeek }})
       </th>
     </tr>
@@ -51,7 +52,7 @@
       <tr class="date" v-if="new Date(dateInfo.fullDate) >= new Date(new Date().setHours(0,0,0,0))"
           :style="selectedIndex === index ? 'background-color: #c0f2ff' : ''"
           @click="updateAndEmitSelectedDate(dateInfo, index)">
-        <td class="col">
+        <td class="col" :class="{'sunday': dateInfo.dayOfWeek === '일', 'saturday': dateInfo.dayOfWeek === '토'}">
           {{ dateInfo.fullDate }}({{ dateInfo.dayOfWeek }})
         </td>
         <td>
@@ -238,13 +239,11 @@ export default {
   border-bottom: 1px solid #b9bbbe;
 }
 
-.day:nth-child(7n + 1),
-.date:nth-child(7n + 1) {
+.sunday {
   color: #D13E3E;
 }
 
-.day:nth-child(7n),
-.date:nth-child(7n) {
+.saturday {
   color: #396EE2;
 }
 

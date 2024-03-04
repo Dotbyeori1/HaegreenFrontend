@@ -1,8 +1,9 @@
 const path = require('path');
 
 module.exports = {
-  outputDir: path.resolve(__dirname, "./public/frontOffice"),
+  outputDir: path.resolve(__dirname, "./dist/frontoffice"),
   devServer: {
+    host: "0.0.0.0",
     port: 3000,
     proxy: {
       '': {

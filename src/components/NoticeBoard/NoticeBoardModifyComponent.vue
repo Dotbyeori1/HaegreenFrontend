@@ -54,7 +54,7 @@
                             <label class="form-label">이미지</label>
                             <input class="form-control" type="file"
                                    @change="onFileSelected($event, 'file'+(index+1))">
-                            <img :src="`/haegreen/${img.uuidfileName}`"
+                            <img :src="`http://localhost/haegreen/${img.uuidfileName}`"
                                  alt="Uploaded Image Preview" width="100px" height="100px"/>
                             <input type="checkbox"
                                    @change="onImageDeleteCheckboxChanged(img.ino, $event.target.checked)"/>
@@ -77,7 +77,7 @@
                   </tr>
                 </table>
 
-                <div class="mat-25" style="text-align: center">
+                <div class="button-container">
                   <button type="button" class="btn btn-info" @click="moveToList()">목록으로</button>
 
                   <button type="submit" class="btn btn-primary">수정하기</button>
@@ -151,6 +151,9 @@ export default {
       });
     },
     async removeNoticeBoard() {
+      let result = confirm("삭제하시겠습니까?");
+      if(!result) return null;
+
       try {
         const response = await frontSideApiService.noticeBoardDelete({nbno: this.nbno});
         alert(response.data.success);
@@ -235,5 +238,13 @@ export default {
 </script>
 
 <style scoped>
+.button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
 
+.button-container button {
+  margin: 0 5px;
+}
 </style>

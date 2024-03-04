@@ -15,7 +15,7 @@
               </div>
               <p style="margin-top: 20px; text-align: right;">작성일 : {{ formatDate(dto.regTime) }}<br/>
                 수정일 : {{ formatDate(dto.modTime) }}</p>
-              <div class="mat-25" style="text-align: center">
+              <div class="button-container" style="text-align: center">
                 <router-link
                     :to="{ name: 'NoticeBoardList', query: { nbno: dto.nbno, page: page, type: type, keyword: keyword }}">
                   <button type="button" class="btn btn-info">목록으로</button>
@@ -25,11 +25,11 @@
                              :to="{ name: 'NoticeBoardModify', query: { nbno: dto.nbno, page: page, type: type, keyword: keyword }}">
                   <button type="button" class="btn btn-outline-primary">수정하기</button>
                 </router-link>
-              </div>
 
-              <button type="button" class="btn btn-danger removeBtn" v-if="role === 'ADMIN'" @click="removeNoticeBoard">
-                삭제하기
-              </button>
+                <button type="button" class="btn btn-danger removeBtn" v-if="role === 'ADMIN'" @click="removeNoticeBoard">
+                  삭제하기
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -69,6 +69,9 @@ export default {
       }
     },
     async removeNoticeBoard() {
+      let result = confirm("삭제하시겠습니까?");
+      if(!result) return null;
+
       try {
         const response = await frontSideApiService.noticeBoardDelete({nbno: this.nbno});
         alert(response.data.success);
@@ -98,5 +101,13 @@ export default {
 </script>
 
 <style scoped>
+.button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
 
+.button-container button {
+  margin: 0 5px;
+}
 </style>

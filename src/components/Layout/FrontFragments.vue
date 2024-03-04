@@ -57,7 +57,7 @@
                         <router-link class="nav-link" to="/member/join" v-if="role == null">회원가입</router-link>
                       </li>
                       <li class="nav-item" v-if="role==='ADMIN'">
-                        <a class="nav-link" href="http://localhost:3001/admin/reservationlist" @click="changeMode(true)">관리자</a>
+                        <a class="nav-link" href="http://localhost:3001/admin/reservationlist">관리자</a>
                       </li>
                       <li class="nav-item" v-if="role != null ">
                         <router-link class="nav-link" to="/member/memberinfo">회원정보</router-link>
@@ -142,19 +142,15 @@ export default {
   props: {
     changeView: Boolean
   },
-  setup(props, {emit}) {
+  setup() {
     const userStore = useUserStore();
     const role = computed(() => userStore.role);
-
-    function changeMode(change) {
-      emit('changeView', change);
-    }
 
     function logout() {
       userStore.logout();
     }
 
-    return {role, logout, changeMode};
+    return {role, logout, };
   }
 }
 
